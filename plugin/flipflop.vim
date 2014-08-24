@@ -4,16 +4,19 @@ function! FlipFlopShowText(text)
     let curbufname = bufname("%")
     let bufname = "__STDIFF__"
     let bufwinnr = bufwinnr(bufname)
+    let splitted_text = split(a:text, "\n")
     if  bufwinnr == -1
-        exec '5split ' . bufname
+        exec len(splitted_text) 'split ' . bufname
         set buftype=nofile
         set fileformat=unix
-        let bufwinnr = bufwinnr(bufname)
+        exec bufwinnr(bufname) 'wincmd w'
+    else
+        exec bufwinnr 'wincmd w'
+        exec 'resize ' len(splitted_text)
     endif
 
-    exec bufwinnr 'wincmd w'
     colorscheme decorative-terminal
-    call append(0, split(a:text, "\n"))
+    call append(0, splitted_text)
     let curwinnr = bufwinnr(curbufname)
     exec curwinnr . 'wincmd w'
 endfunction
