@@ -1,3 +1,15 @@
+function! FlipFlopMoveToBufferInCurrentWindow(bufspec)
+    let typenr = type(a:bufspec)
+    if typenr == 0 " Number
+        exec a:bufspec 'wincmd w'
+    elseif typenr == 1 " String
+        let winnr = bufwinnr(a:bufspec)
+        if winnr != -1
+            exec winnr 'wincmd w'
+        endif
+    endif
+endfunction
+
 " Open the FlipFlop buffer. Height argument controls the height of
 " opened flipflop buffer If a:keep_current is 1, the original current
 " buffer will retrieved as the current buffer at the end of function. If
@@ -11,20 +23,26 @@ function! FlipFlopOpenFlipFlopBuffer(height, keep_current)
     else
         let land_on = g:flipflop_buffer_name
     endif
+    if exists("g:flipflop_buffer_align_topof")
+        let align_bufferwinnr = bufwinnr(g:flipflop_buffer_align_topof)
+        if align_bufferwinnr != -1
+            call FlipFlopMoveToBufferInCurrentWindow(align_bufferwinnr)
+        endif
+    endif
     exec a:height 'split ' g:flipflop_buffer_name
     set buftype=nofile
     set fileformat=unix
     colorscheme decorative-terminal
     exec "%delete"
 
-    exec bufwinnr(land_on) 'wincmd w'
+    call FlipFlopMoveToBufferInCurrentWindow(land_on)
 endfunction
 
 
 function! FlipFlopShowText(text)
     " Save the window number here is not applicable because it could be
     " cahnged by the side-effect of following use of split command.
-    let curbufname = bufname("%")
+    let curbufwinnr = bufwinnr("%")
     let bufwinnr = bufwinnr(g:flipflop_buffer_name)
     let splitted_text = split(a:text, "\n")
     if  bufwinnr == -1
@@ -35,6 +53,5 @@ function! FlipFlopShowText(text)
         exec "%delete"
     endif
     call append(0, splitted_text)
-    let curwinnr = bufwinnr(curbufname)
-    exec curwinnr . 'wincmd w'
+    call FlipFlopMoveToBufferInCurrentWindow(curbufwinnr)
 endfunction
