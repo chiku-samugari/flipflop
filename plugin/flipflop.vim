@@ -7,12 +7,13 @@ function! FlipFlopShowText(text)
     if  bufwinnr == -1
         exec '5split ' . bufname
         set buftype=nofile
+        set fileformat=unix
         let bufwinnr = bufwinnr(bufname)
     endif
 
     exec bufwinnr 'wincmd w'
     colorscheme decorative-terminal
-    call append(0, a:text)
+    call append(0, split(a:text, "\n"))
     let curwinnr = bufwinnr(curbufname)
     exec curwinnr . 'wincmd w'
 endfunction
