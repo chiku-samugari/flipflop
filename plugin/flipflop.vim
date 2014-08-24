@@ -2,7 +2,7 @@ function! FlipFlopShowText(text)
     " Save the window number here is not applicable because it could be
     " cahnged by the side-effect of following use of split command.
     let curbufname = bufname("%")
-    let bufname = "__STDIFF__"
+    let bufname = g:flipflop_buffer_name
     let bufwinnr = bufwinnr(bufname)
     let splitted_text = split(a:text, "\n")
     if  bufwinnr == -1
