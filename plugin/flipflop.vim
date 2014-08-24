@@ -9,7 +9,6 @@ function! FlipFlopShowText(text)
         exec len(splitted_text) 'split ' . bufname
         set buftype=nofile
         set fileformat=unix
-        exec bufwinnr(bufname) 'wincmd w'
     else
         exec bufwinnr 'wincmd w'
         exec 'resize ' len(splitted_text)
