@@ -14,6 +14,7 @@ function! FlipFlopShowText(text)
         exec bufwinnr 'wincmd w'
         exec 'resize ' len(splitted_text)
     endif
+    exec "%delete"
 
     colorscheme decorative-terminal
     call append(0, splitted_text)
