@@ -1,21 +1,39 @@
+" Open the FlipFlop buffer. Height argument controls the height of
+" opened flipflop buffer If a:keep_current is 1, the original current
+" buffer will retrieved as the current buffer at the end of function. If
+" a:keep_current is 0, the opened flipflop buffer will be the current
+" buffer after the function call. It deletes the contents of flipflop
+" buffer.
+function! FlipFlopOpenFlipFlopBuffer(height, keep_current)
+    let land_on = ''
+    if a:keep_current == 1
+        let land_on = bufname("%")
+    else
+        let land_on = g:flipflop_buffer_name
+    endif
+    exec a:height 'split ' g:flipflop_buffer_name
+    set buftype=nofile
+    set fileformat=unix
+    colorscheme decorative-terminal
+    exec "%delete"
+
+    exec bufwinnr(land_on) 'wincmd w'
+endfunction
+
+
 function! FlipFlopShowText(text)
     " Save the window number here is not applicable because it could be
     " cahnged by the side-effect of following use of split command.
     let curbufname = bufname("%")
-    let bufname = g:flipflop_buffer_name
-    let bufwinnr = bufwinnr(bufname)
+    let bufwinnr = bufwinnr(g:flipflop_buffer_name)
     let splitted_text = split(a:text, "\n")
     if  bufwinnr == -1
-        exec len(splitted_text) 'split ' . bufname
-        set buftype=nofile
-        set fileformat=unix
+        call FlipFlopOpenFlipFlopBuffer(len(splitted_text), 0)
     else
         exec bufwinnr 'wincmd w'
         exec 'resize ' len(splitted_text)
+        exec "%delete"
     endif
-    exec "%delete"
-
-    colorscheme decorative-terminal
     call append(0, splitted_text)
     let curwinnr = bufwinnr(curbufname)
     exec curwinnr . 'wincmd w'
