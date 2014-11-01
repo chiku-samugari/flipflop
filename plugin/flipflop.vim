@@ -30,7 +30,7 @@ function! FlipFlopOpenFlipFlopBuffer(height, keep_current)
         endif
     endif
     exec a:height 'split ' g:flipflop_buffer_name
-    set buftype=nofile
+    setlocal buftype=nofile
     set fileformat=unix
     colorscheme decorative-terminal
     exec "%delete"
