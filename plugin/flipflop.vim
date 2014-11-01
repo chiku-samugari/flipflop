@@ -53,5 +53,6 @@ function! FlipFlopShowText(text)
         exec "%delete"
     endif
     call append(0, splitted_text)
+    call cursor(1,0)
     call FlipFlopMoveToBufferInCurrentWindow(curbufwinnr)
 endfunction
